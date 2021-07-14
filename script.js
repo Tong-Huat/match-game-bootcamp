@@ -4,7 +4,10 @@ const board = [];
 let firstCard = null;
 let firstCardElement;
 let deck;
-
+const gameInfo = document.createElement('div');
+const output = (message) => {
+  gameInfo.innerText = message;
+};
 // Get a random index ranging from 0 (inclusive) to max (exclusive).
 const getRandomIndex = (max) => Math.floor(Math.random() * max);
 
@@ -74,6 +77,10 @@ const makeDeck = (cardAmount) => {
 const squareClick = (cardElement, column, row) => {
   console.log(cardElement);
 
+  console.log(column);
+
+  console.log(row);
+
   console.log('FIRST CARD DOM ELEMENT', firstCard);
 
   console.log('BOARD CLICKED CARD', board[column][row]);
@@ -92,6 +99,7 @@ const squareClick = (cardElement, column, row) => {
     // turn this card over
     cardElement.innerText = firstCard.name + firstCard.suit;
 
+    output('Click your 2nd card!');
     // hold onto this for later when it may not match
     firstCardElement = cardElement;
 
@@ -103,14 +111,19 @@ const squareClick = (cardElement, column, row) => {
         && clickedCard.suit === firstCard.suit
     ) {
       console.log('match');
-
+      output('You found a match! Click on another square to continue the game!');
       // turn this card over
-      cardElement.innerText = clickedCard.name;
+      cardElement.innerText = clickedCard.name + clickedCard.suit;
     } else {
       console.log('NOT a match');
+      output('Not a match! Click on another square!');
+      // need to set timer for next line
+      cardElement.innerText = clickedCard.name + clickedCard.suit;
 
       // turn this card back over
-      firstCardElement.innerText = '';
+      setTimeout(() => {
+        firstCardElement.innerText = '';
+        cardElement.innerText = ''; }, 1000);
     }
 
     // reset the first card
@@ -150,7 +163,7 @@ const buildBoardElements = (board) => {
         // we will want to pass in the card element so
         // that we can change how it looks on screen, i.e.,
         // "turn the card over"
-        squareClick(event.currentTarget, i, j);
+        squareClick(square, i, j);
       });
 
       rowElement.appendChild(square);
@@ -179,6 +192,10 @@ const initGame = () => {
   const boardEl = buildBoardElements(board);
 
   document.body.appendChild(boardEl);
+
+  // fill game info div with starting instructions
+  gameInfo.innerText = 'Click on 1 of the square to start Matching Game! Good luck!';
+  document.body.appendChild(gameInfo);
 };
 
 initGame();
