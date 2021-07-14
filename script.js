@@ -111,7 +111,10 @@ const squareClick = (cardElement, column, row) => {
         && clickedCard.suit === firstCard.suit
     ) {
       console.log('match');
-      output('You found a match! Click on another square to continue the game!');
+      output('You found a match! Click on another square!');
+      setTimeout(() => {
+        output('');
+      }, 1000);
       // turn this card over
       cardElement.innerText = clickedCard.name + clickedCard.suit;
     } else {
