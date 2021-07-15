@@ -5,6 +5,7 @@ let firstCard = null;
 let firstCardElement;
 let deck;
 let cardMatched = 0;
+let ref = '';
 const gameInfo = document.createElement('div');
 const output = (message) => {
   gameInfo.innerText = message;
@@ -82,6 +83,7 @@ const showWinMessage = () => {
     winMessage.innerText = 'CONGRATS! YOU WON!';
     winMessage.className = 'winMessage';
     document.body.appendChild(winMessage);
+    clearInterval(ref);
     setTimeout(() => {
       winMessage.innerText = '';
     }, 2000);
@@ -208,7 +210,7 @@ const timer = () => {
   hThree.appendChild(countdownText);
   hThree.appendChild(clockOutput);
 
-  const ref = setInterval(() => {
+  ref = setInterval(() => {
     clockOutput.innerText = milliseconds;
 
     if (milliseconds <= 0) {
