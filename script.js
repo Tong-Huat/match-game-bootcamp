@@ -190,9 +190,9 @@ const squareClick = (cardElement, column, row) => {
 };
 // create countdown timer
 const timer = () => {
-  const hTwo = document.createElement('h2');
-  hTwo.className = 'h2';
-  document.body.appendChild(hTwo);
+  const hThree = document.createElement('h3');
+  hThree.className = 'h3';
+  document.body.appendChild(hThree);
 
   const countdownText = document.createElement('div');
   countdownText.innerText = 'TIME LEFT: ';
@@ -205,8 +205,8 @@ const timer = () => {
   clockOutput.innerText = milliseconds;
   document.body.appendChild(clockOutput);
 
-  hTwo.appendChild(countdownText);
-  hTwo.appendChild(clockOutput);
+  hThree.appendChild(countdownText);
+  hThree.appendChild(clockOutput);
 
   const ref = setInterval(() => {
     clockOutput.innerText = milliseconds;
@@ -250,10 +250,10 @@ const initGame = () => {
 
 initGame();
 
-// create reset button
-const resetButton = document.createElement('button');
-resetButton.innerText = 'Reset Game';
-resetButton.className = 'reset';
-document.body.appendChild(resetButton);
+// // create reset button
+// const resetButton = document.createElement('button');
+// resetButton.innerText = 'Reset Game';
+// resetButton.className = 'reset';
+// document.body.appendChild(resetButton);
 
-resetButton.addEventListener('click', initGame);
+// resetButton.addEventListener('click', initGame);

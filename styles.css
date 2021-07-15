@@ -1,5 +1,6 @@
 body {
   background-color: pink;
+  text-align: center;
 }
 
 .square {
@@ -10,4 +11,9 @@ body {
   height: 30px;
   width: 30px;
   vertical-align: top;
+}
+
+.gameover {
+  color: red;
+  font-size: 50px;
 }
