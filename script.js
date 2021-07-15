@@ -1,9 +1,10 @@
 // boardSize has to be an even number
-const boardSize = 4;
+const boardSize = 2;
 const board = [];
 let firstCard = null;
 let firstCardElement;
 let deck;
+let cardMatched = 0;
 const gameInfo = document.createElement('div');
 const output = (message) => {
   gameInfo.innerText = message;
@@ -47,13 +48,13 @@ const makeDeck = (cardAmount) => {
 
       // 1, 11, 12 ,13
       if (cardName === '1') {
-        cardName = 'ace';
+        cardName = 'A';
       } else if (cardName === '11') {
-        cardName = 'jack';
+        cardName = 'J';
       } else if (cardName === '12') {
-        cardName = 'queen';
+        cardName = 'Q';
       } else if (cardName === '13') {
-        cardName = 'king';
+        cardName = 'K';
       }
 
       // make a single card object variable
@@ -74,63 +75,16 @@ const makeDeck = (cardAmount) => {
   return newDeck;
 };
 
-const squareClick = (cardElement, column, row) => {
-  console.log(cardElement);
-
-  console.log(column);
-
-  console.log(row);
-
-  console.log('FIRST CARD DOM ELEMENT', firstCard);
-
-  console.log('BOARD CLICKED CARD', board[column][row]);
-
-  const clickedCard = board[column][row];
-
-  // the user already clicked on this square
-  if (cardElement.innerText !== '') {
-    return;
-  }
-
-  // first turn
-  if (firstCard === null) {
-    console.log('first turn');
-    firstCard = clickedCard;
-    // turn this card over
-    cardElement.innerText = firstCard.name + firstCard.suit;
-
-    output('Click your 2nd card!');
-    // hold onto this for later when it may not match
-    firstCardElement = cardElement;
-
-    // second turn
-  } else {
-    console.log('second turn');
-    if (
-      clickedCard.name === firstCard.name
-        && clickedCard.suit === firstCard.suit
-    ) {
-      console.log('match');
-      output('You found a match! Click on another square!');
-      setTimeout(() => {
-        output('');
-      }, 1000);
-      // turn this card over
-      cardElement.innerText = clickedCard.name + clickedCard.suit;
-    } else {
-      console.log('NOT a match');
-      output('Not a match! Click on another square!');
-      // need to set timer for next line
-      cardElement.innerText = clickedCard.name + clickedCard.suit;
-
-      // turn this card back over
-      setTimeout(() => {
-        firstCardElement.innerText = '';
-        cardElement.innerText = ''; }, 1000);
-    }
-
-    // reset the first card
-    firstCard = null;
+// create win message when all the cards are matched
+const showWinMessage = () => {
+  if (cardMatched === 2) {
+    const winMessage = document.createElement('h2');
+    winMessage.innerText = 'CONGRATS! YOU WON!';
+    winMessage.className = 'winMessage';
+    document.body.appendChild(winMessage);
+    setTimeout(() => {
+      winMessage.innerText = '';
+    }, 2000);
   }
 };
 
@@ -177,6 +131,98 @@ const buildBoardElements = (board) => {
   return boardElement;
 };
 
+const squareClick = (cardElement, column, row) => {
+  console.log(cardElement);
+
+  console.log('FIRST CARD DOM ELEMENT', firstCard);
+
+  console.log('BOARD CLICKED CARD', board[column][row]);
+
+  const clickedCard = board[column][row];
+
+  // the user already clicked on this square
+  if (cardElement.innerText !== '') {
+    return;
+  }
+
+  // first turn
+  if (firstCard === null) {
+    console.log('first turn');
+    firstCard = clickedCard;
+    // turn this card over
+    cardElement.innerHTML = `${firstCard.name} <br> ${firstCard.suit}`;
+
+    output('Click your 2nd card!');
+    // hold onto this for later when it may not match
+    firstCardElement = cardElement;
+
+    // second turn
+  } else {
+    console.log('second turn');
+    if (
+      clickedCard.name === firstCard.name
+        && clickedCard.suit === firstCard.suit
+    ) {
+      console.log('match');
+      output('You found a match! Click on another square!');
+      setTimeout(() => {
+        output('');
+      }, 1000);
+      // turn this card over
+      cardElement.innerHTML = `${clickedCard.name} <br> ${clickedCard.suit}`;
+      cardMatched += 1;
+      showWinMessage();
+    } else {
+      console.log('NOT a match');
+      output('Not a match! Click on another square!');
+      // need to set timer for next line
+      cardElement.innerHTML = `${clickedCard.name} <br> ${clickedCard.suit}`;
+
+      // turn this card back over
+      setTimeout(() => {
+        firstCardElement.innerText = '';
+        cardElement.innerText = ''; }, 1000);
+    }
+
+    // reset the first card
+    firstCard = null;
+  }
+};
+// create countdown timer
+const timer = () => {
+  const hTwo = document.createElement('h2');
+  hTwo.className = 'h2';
+  document.body.appendChild(hTwo);
+
+  const countdownText = document.createElement('div');
+  countdownText.innerText = 'TIME LEFT: ';
+  document.body.appendChild(countdownText);
+
+  // set countdown
+  let milliseconds = 3000;
+  const decreaseInMilliseconds = 1;
+  const clockOutput = document.createElement('div');
+  clockOutput.innerText = milliseconds;
+  document.body.appendChild(clockOutput);
+
+  hTwo.appendChild(countdownText);
+  hTwo.appendChild(clockOutput);
+
+  const ref = setInterval(() => {
+    clockOutput.innerText = milliseconds;
+
+    if (milliseconds <= 0) {
+      clearInterval(ref);
+      const gameOverText = document.createElement('div');
+      gameOverText.innerText = '!!!GAME OVER!!!';
+      gameOverText.className = 'gameover';
+      document.body.appendChild(gameOverText);
+      output('');
+    }
+    milliseconds -= 1;
+  }, decreaseInMilliseconds);
+};
+
 const initGame = () => {
   // create this special deck by getting the doubled cards and
   // making a smaller array that is ( boardSize squared ) number of cards
@@ -199,38 +245,15 @@ const initGame = () => {
   // fill game info div with starting instructions
   gameInfo.innerText = 'Click on 1 of the square to start Matching Game! Good luck!';
   document.body.appendChild(gameInfo);
+  timer();
 };
 
-const hTwo = document.createElement('h2');
-hTwo.className = 'h2';
-document.body.appendChild(hTwo);
-
-const countdownText = document.createElement('div');
-countdownText.innerText = 'TIME LEFT: ';
-document.body.appendChild(countdownText);
-
-// create countdown timer
-let milliseconds = 1000;
-const decreaseInMilliseconds = 1;
-const clockOutput = document.createElement('div');
-clockOutput.innerText = milliseconds;
-document.body.appendChild(clockOutput);
-
-hTwo.appendChild(countdownText);
-hTwo.appendChild(clockOutput);
-
-const ref = setInterval(() => {
-  clockOutput.innerText = milliseconds;
-
-  if (milliseconds <= 0) {
-    clearInterval(ref);
-    const gameOverText = document.createElement('div');
-    gameOverText.innerText = '!!!GAME OVER!!!';
-    gameOverText.className = 'gameover';
-    document.body.appendChild(gameOverText);
-    output('');
-  }
-  milliseconds -= 1;
-}, decreaseInMilliseconds);
-
 initGame();
+
+// create reset button
+const resetButton = document.createElement('button');
+resetButton.innerText = 'Reset Game';
+resetButton.className = 'reset';
+document.body.appendChild(resetButton);
+
+resetButton.addEventListener('click', initGame);
