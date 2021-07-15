@@ -162,7 +162,7 @@ const buildBoardElements = (board) => {
 
       // set the click event
       // eslint-disable-next-line
-      square.addEventListener('click', (event) => {
+      square.addEventListener('click', () => {
         // we will want to pass in the card element so
         // that we can change how it looks on screen, i.e.,
         // "turn the card over"
@@ -200,5 +200,37 @@ const initGame = () => {
   gameInfo.innerText = 'Click on 1 of the square to start Matching Game! Good luck!';
   document.body.appendChild(gameInfo);
 };
+
+const hTwo = document.createElement('h2');
+hTwo.className = 'h2';
+document.body.appendChild(hTwo);
+
+const countdownText = document.createElement('div');
+countdownText.innerText = 'TIME LEFT: ';
+document.body.appendChild(countdownText);
+
+// create countdown timer
+let milliseconds = 1000;
+const decreaseInMilliseconds = 1;
+const clockOutput = document.createElement('div');
+clockOutput.innerText = milliseconds;
+document.body.appendChild(clockOutput);
+
+hTwo.appendChild(countdownText);
+hTwo.appendChild(clockOutput);
+
+const ref = setInterval(() => {
+  clockOutput.innerText = milliseconds;
+
+  if (milliseconds <= 0) {
+    clearInterval(ref);
+    const gameOverText = document.createElement('div');
+    gameOverText.innerText = '!!!GAME OVER!!!';
+    gameOverText.className = 'gameover';
+    document.body.appendChild(gameOverText);
+    output('');
+  }
+  milliseconds -= 1;
+}, decreaseInMilliseconds);
 
 initGame();
