@@ -1,5 +1,5 @@
 // boardSize has to be an even number
-const boardSize = 2;
+const boardSize = 4;
 const board = [];
 let firstCard = null;
 let firstCardElement;
@@ -78,7 +78,7 @@ const makeDeck = (cardAmount) => {
 
 // create win message when all the cards are matched
 const showWinMessage = () => {
-  if (cardMatched === 2) {
+  if (cardMatched === (boardSize ** 2) / 2) {
     const winMessage = document.createElement('h2');
     winMessage.innerText = 'CONGRATS! YOU WON!';
     winMessage.className = 'winMessage';
